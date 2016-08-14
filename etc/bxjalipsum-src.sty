@@ -2,7 +2,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxjalipsum}[2016/08/12 v0.2]
+\ProvidesPackage{bxjalipsum}[2016/08/15 v0.2]
 \def\bxjl@pkgname{bxjalipsum}
 
 %% preparation
@@ -148,7 +148,7 @@
 
 \fi                 %---</eTeX>
 %--------------------------------------- range list parser
-\catcode`\:=4 \catcode`\!=4
+\catcode`\:=4 \catcode`\!=4 % really unique character tokens
 
 %% \bxjl@rx@ifnum{<text>}{<true>}{<false>}
 \def\bxjl@rx@ifnum#1{%
@@ -480,6 +480,9 @@
 〠〠〠〠〠〠〠〠〠〠
 
 %--------------------------------------- text data
+% Very unfortunately, no single encoding can serve all probable uses of
+% all TeX engines. So I have to give the Japanese text in hex dump....
+% (Non-ASCII in comments is safe, as long as it is in UTF-8.)
 
 %% \bxjl@text{<key>}{<number>}{<p-code>}
 \bxjl@preamble\def\bxjl@text#1#2{%

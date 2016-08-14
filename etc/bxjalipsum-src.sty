@@ -2,7 +2,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxjalipsum}[2016/08/12 v0.1]
+\ProvidesPackage{bxjalipsum}[2016/08/12 v0.2]
 \def\bxjl@pkgname{bxjalipsum}
 
 %% preparation
@@ -40,6 +40,12 @@
   \@onlypreamble#2#1#2%
 }
 
+%% \bxjl@burst-`>...
+\let\bxjl@burst\romannumeral
+
+%% \bxjl@burst@stop
+\let\bxjl@burst@stop\space
+
 %% \bxjl@csletcs{<csA>}{<csB>}
 \def\bxjl@csletcs#1#2{%
   \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname
@@ -49,6 +55,12 @@
 \@gobbletwo\if\if \def\bxjl@cond#1\fi{%
   #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
 }
+
+%% \bxjl@ifblank{<text>}{<true>}{<false>}
+\long\def\bxjl@ifblank#1{%
+  \bxjl@ifblank@a#1\bxjl@mt\bxjl@mt\@secondoftwo\@firstoftwo\bxjl@end
+}
+\long\def\bxjl@ifblank@a#1#2\bxjl@mt#3#4#5\bxjl@end{#4}
 
 %--------------------------------------- environment check
 
@@ -75,6 +87,272 @@
 \ifx b\bxjl@engine\else
   \bxjl@CJKtildefalse
 \fi
+
+%--------------------------------------- error message
+\unless\ifbxjl@etex        %---<*eTeX>
+
+\bxjl@preamble\def\bxjl@decl@error#1#2{%
+  \protected\def#1{%
+    \PackageError\bxjl@pkgname{#2}\@ehc
+  }%
+}
+
+\else               %---<*!eTeX>
+
+\newcount\bxjl@err@id
+\bxjl@preamble\def\bxjl@decl@error#1#2{%
+  \advance\bxjl@err@id\@ne
+  \expandafter\bxjl@decl@error@a
+      \csname \bxjl@pkgname[E\the\bxjl@err@id]\expandafter\endcsname
+      \csname ! #2.\endcsname#1%
+}
+\bxjl@preamble\def\bxjl@decl@error@a#1#2#3{%
+  \def#3{#1}\def#1{#2}\let#2\@undefined
+}
+
+\fi                 %---</eTeX>
+
+%%
+\bxjl@decl@error\bxjl@err@ivrsp{%
+  Invalid range specification%
+}
+\bxjl@decl@error\bxjl@err@ukkey{%
+  Unknown key is given%
+}
+
+%--------------------------------------- arithmetic
+\ifbxjl@etex        %---<*eTeX>
+
+%% \bxjl@add@num{<x>}{<y>}
+\def\bxjl@add@num#1#2{%
+  \the\numexpr#1+(#2)\relax
+}
+%% \bxjl@sub@num{<x>}{<y>}
+\def\bxjl@sub@num#1#2{%
+  \the\numexpr#1-(#2)\relax
+}
+
+\else               %---<*!eTeX>
+
+%% package
+\RequirePackage{intcalc}
+%% \bxjl@add@num{<x>}{<y>}
+\let\bxjl@add@num\intcalcadd@num
+%% \bxjl@sub@num{<x>}{<y>}
+\let\bxjl@sub@num\intcalcsub@num
+
+\fi                 %---</eTeX>
+%---------------------------------------
+\catcode`\:=4 \catcode`\!=4
+
+%% \bxjl@rx@ifnum{<text>}{<true>}{<false>}
+\def\bxjl@rx@ifnum#1{%
+  \expandafter\bxjl@rx@ifnum@a\bxjl@burst-#1:%
+}
+\def\bxjl@rx@ifnum@a#1:{%
+  \bxjl@ifblank{#1}%
+}
+
+%% \bxjl@rx@split{<text>}\CStrue\CSfalse
+\def\bxjl@rx@split#1{%
+  \bxjl@rx@split@a#1-:%
+}
+\def\bxjl@rx@split@a#1-#2:{%
+  \bxjl@cond\ifx!#2!\fi{%
+    \bxjl@rx@split@c#1:%
+  }{%else
+    \bxjl@rx@split@b#1:#2:%
+  }%
+}
+\def\bxjl@rx@split@b#1:#2-:#3#4{%
+  #3{#1}{#2}%
+}
+\def\bxjl@rx@split@c#1:#2#3{%
+  #3{#1}%
+}
+
+%% \bxjl@rx@splitbrk{<text>}\CStrue\CSfalse
+\def\bxjl@rx@splitbrk#1{%
+  \bxjl@rx@splitbrk@a#1[]:%
+}
+\def\bxjl@rx@splitbrk@a#1[#2]#3:{%
+  \bxjl@cond\ifx!#3!\fi{%
+    \@secondoftwo
+  }{\bxjl@ifblank{#1}{%
+    \bxjl@rx@splitbrk@b#3:{#2}%
+  }{%else
+    \@secondoftwo
+  }}%
+}
+\def\bxjl@rx@splitbrk@b#1[]:#2#3#4{%
+  \bxjl@ifblank{#1}{%
+    #3{#2}%
+  }{%else
+    #4%
+  }%
+}
+
+%% \bxjl@rx@clean@num{<text>}\CScont
+\def\bxjl@next#1{%
+  \def\bxjl@rx@clean@num##1{%
+    \expandafter\bxjl@rx@clean@num@a\number##1#1#1:%
+  }
+  \def\bxjl@rx@clean@num@a##1#1##2:##3{%
+    ##3{##1}%
+  }
+}\bxjl@next{ }
+
+%% \bxjl@rx@seq{<num1>}{<num2>}\CScont
+\def\bxjl@rx@seq#1{%
+  \bxjl@rx@clean@num{#1}\bxjl@rx@seq@a
+}
+\def\bxjl@rx@seq@a#1#2#3{%
+  \bxjl@rx@seq@b#1:#2:!:#3%
+}
+\def\bxjl@rx@seq@b#1:#2:#3:{%
+  \bxjl@cond\ifnum#2<#1 \fi{%
+    \bxjl@rx@seq@c#3:%
+  }{%else
+    \expandafter\bxjl@rx@seq@b\bxjl@burst-`>\bxjl@add@num{#1}{1}:%
+        #2:#3{#1}:%
+  }%
+}
+\def\bxjl@rx@seq@c#1:#2{%
+  \expandafter#2\expandafter{\@gobble#1}%
+}
+
+%% \bxjl@rx@parse{<text>}{<u-limit>}\CStrue\CSfalse
+\def\bxjl@rx@parse#1#2{%
+  \expandafter\bxjl@rx@parse@a\bxjl@burst-`>#1,!,:#2:!:%
+}
+\def\bxjl@rx@parse@a#1,{%
+  \bxjl@cond\ifx!#1\fi{%
+    \bxjl@rx@parse@b
+  }{%else
+    \bxjl@rx@split{#1}\bxjl@rx@parse@c\bxjl@rx@parse@d
+  }%
+}
+\def\bxjl@rx@parse@b#1:#2:#3:#4#5{%
+  \expandafter#4\expandafter{\@gobble#3}%
+}
+\def\bxjl@rx@parse@c#1{%
+  \bxjl@ifblank{#1}{%
+    \bxjl@rx@parse@e{1}%
+  }{\bxjl@rx@ifnum{#1}{%
+    \bxjl@rx@parse@e{#1}%
+  }{%else
+    \bxjl@rx@parse@fail
+  }}%
+}
+\def\bxjl@rx@parse@d#1{%
+  \bxjl@ifblank{#1}{%
+    \bxjl@rx@parse@f{1}{0}%
+  }{\bxjl@rx@ifnum{#1}{%
+    \bxjl@rx@parse@f{#1}{#1}%
+  }{%else
+    \bxjl@rx@parse@fail
+  }}%
+}
+\def\bxjl@rx@parse@e#1#2{%
+  \bxjl@ifblank{#2}{%
+    \bxjl@rx@parse@f{#1}{\maxdimen}%
+  }{\bxjl@rx@ifnum{#2}{%
+    \bxjl@rx@parse@f{#1}{#2}%
+  }{%else
+    \bxjl@rx@parse@fail
+  }}%
+}
+\def\bxjl@rx@parse@f#1{%
+  \bxjl@cond\ifnum#1<1 \fi{%
+    \bxjl@rx@parse@g{1}%
+  }{%else
+    \bxjl@rx@parse@g{#1}%
+  }%
+}
+\def\bxjl@rx@parse@g#1#2#3:#4:{%
+  \bxjl@cond\ifnum#2>#4 \fi{%
+    \bxjl@rx@seq{#1}{#4}\bxjl@rx@parse@h#3:#4:%
+  }{%else
+    \bxjl@rx@seq{#1}{#2}\bxjl@rx@parse@h#3:#4:%
+  }%
+}
+\def\bxjl@rx@parse@h#1#2:#3:#4:{%
+  \expandafter\bxjl@rx@parse@a\bxjl@burst-`>#2:#3:#4#1:%
+}
+
+\catcode`\:=12 \catcode`\!=12
+%---------------------------------------
+
+%%<*> \jalipsumIroha
+\@ifdefinable\jalipsumIroha{%
+  \AtEndOfPackage{%
+    \bxjl@csletcs{jalipsumIroha}{bxjl@tx@@iroha/1}%
+  }
+}
+
+%%<*> \jalipsumJugemu
+\@ifdefinable\jalipsumJugemu{%
+  \AtEndOfPackage{%
+    \bxjl@csletcs{jalipsumJugemu}{bxjl@tx@@jugemu/1}%
+  }
+}
+
+%%<*> \jalipsumJugemuP
+\@ifdefinable\jalipsumJugemuP{%
+  \AtEndOfPackage{%
+    \bxjl@csletcs{jalipsumJugemuP}{bxjl@tx@@jugemuP/1}%
+  }
+}
+
+
+
+%%<*> \jalipsum[<range>]{<key>}
+\newcommand*{\jalipsum}{%
+  \bxjl@burst-`>\bxjl@jalipsum@a
+}
+\def\bxjl@jalipsum@a#1#{%
+  \bxjl@ifblank{#1}{%
+    \bxjl@jalipsum@c{-}% whole
+  }{%else
+    \bxjl@rx@splitbrk{#1}\bxjl@jalipsum@c\bxjl@jalipsum@b
+  }%
+}
+\def\bxjl@jalipsum@b#1{%
+  \bxjl@err@ivrsp
+}
+\def\bxjl@jalipsum@c#1#2{%
+  \expandafter\bxjl@jalipsum@d\bxjl@burst-`>%
+      \csname bxjl@tc@@#2\endcsname\bxjl@mk{#1}{#2}%
+}
+\def\bxjl@jalipsum@d#1\bxjl@mk#2#3{%
+  \bxjl@cond\ifx\relax#1\fi{%
+    \bxjl@err@ukkey
+  }{%else
+    \bxjl@rx@parse{#2}{#1}\bxjl@jalipsum@e\bxjl@jalipsum@b{#3}%
+  }%
+}
+\def\bxjl@jalipsum@e#1#2{%
+  \bxjl@ifblank{#1}{%
+    \bxjl@burst@stop
+  }{%else
+    \bxjl@jalipsum@f{#2}{}#1\bxjl@end
+  }%
+}
+\long\def\bxjl@jalipsum@f#1#2#3{%
+  \bxjl@cond\ifx\bxjl@end#3\fi{%
+    \bxjl@jalipsum@h#2\bxjl@end
+  }{%else
+    \expandafter\expandafter\expandafter
+        \bxjl@jalipsum@g\csname bxjl@tx@@#1/#3\endcsname
+        \bxjl@mk{#1}{#2}%
+  }%
+}
+\long\def\bxjl@jalipsum@g#1\bxjl@mk#2#3{%
+  \bxjl@jalipsum@f{#2}{#3\par#1}%
+}
+\long\def\bxjl@jalipsum@h#1#2\bxjl@end{%
+  \bxjl@burst@stop#2%
+}
 
 %--------------------------------------- paipo decoder
 
@@ -206,7 +484,7 @@
 }
 \bxjl@preamble\def\bxjl@text@a#1#2{%
   \bxjl@pdecode#1{#2}%
-\bxDebug{\meaning#1}%
+%\bxDebug{\meaning#1}%
 }
 %===============================
 %% text 'iroha'
@@ -214,6 +492,7 @@
 \bxjl@text{iroha/1}{%
 ☃いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす
 }
+\def\bxjl@tc@@iroha{1}
 
 %===============================
 %% text 'jugemu'
@@ -221,9 +500,11 @@
 \bxjl@text{jugemu/1}{%
 ☃寿限無寿限無五劫の擦り切れ海砂利水魚の水行末雲来末風来末食う寝る処に住む処藪ら柑子の藪柑子パイポパイポパイポのシューリンガンシューリンガンのグーリンダイグーリンダイのポンポコピーのポンポコナーの長久命の長助
 }
+\def\bxjl@tc@@jugemu{1}
 \bxjl@text{jugemuP/1}{% with ad hoc punctuations
 ☃寿限無・寿限無、五劫の擦り切れ、海砂利水魚の水行末・雲来末・風来末、食う寝る処に住む処、藪ら柑子の藪柑子、パイポ・パイポ、パイポのシューリンガン、シューリンガンのグーリンダイ、グーリンダイのポンポコピーのポンポコナーの長久命の長助。
 }
+\def\bxjl@tc@@jugemuP{1}
 
 %===============================
 %% text 'wagahai'
@@ -330,6 +611,7 @@
 \bxjl@text{wagahai/33}{%
 ☃吾輩は御馳走も食わないから別段肥りもしないが、まずまず健康で跛にもならずにその日その日を暮している。鼠は決して取らない。おさんは未だに嫌いである。名前はまだつけてくれないが、欲をいっても際限がないから生涯この教師の家で無名の猫で終るつもりだ。
 }
+\def\bxjl@tc@@wagahai{33}
 
 %===============================
 %% text 'preamble'
@@ -348,6 +630,7 @@
 \bxjl@text{preamble/4}{%
 ☃日本国民は、国家の名誉にかけ、全力をあげてこの崇高な理想と目的を達成することを誓ふ。
 }
+\def\bxjl@tc@@preamble{4}
 
 %===============================
 %% text 'hatsukoi'
@@ -367,6 +650,7 @@
 \bxjl@text{hatsukoi/4}{%
 ☃林檎畑の樹の下に☂おのづからなる細道は☂誰が踏みそめしかたみぞと☂問ひたまふこそこひしけれ
 }
+\def\bxjl@tc@@hatsukoi{4}
 
 %===============================
 % test data

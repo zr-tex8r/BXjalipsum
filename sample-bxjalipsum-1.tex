@@ -1,0 +1,44 @@
+\documentclass[a4paper]{ltjsarticle}
+\usepackage{bxjalipsum}
+\begin{document}
+
+\section{iroha}
+
+% the Iroha sequence
+\jalipsumiroha
+
+\section{jugemu}
+
+\begin{flushright}
+
+% the person name in Jugemu
+\begin{parbox}[t]{12\zw}{%
+\jalipsumjugemu
+}%
+\end{parbox}
+\hspace{2cm}%
+\begin{parbox}[t]{12\zw}{%
+\jalipsumjugemuP
+}%
+\end{parbox}
+
+\end{flushright}
+
+\section{wagahai}
+
+% "Wagahai wa Neko de aru" by Natsume Soseki
+\begin{itemize}
+\item \jalipsum[-2]{wagahai}
+\item \jalipsum[3-4]{wagahai}
+\item \jalipsum[5]{wagahai}
+\end{itemize}
+
+\section{hatsukoi}
+
+% "Hatsukoi" by Shimazaki Toson
+\begin{quote}
+\addtolength{\parskip}{\baselineskip}
+\jalipsum{hatsukoi}
+\end{quote}
+
+\end{document}

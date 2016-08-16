@@ -1,10 +1,10 @@
 % upLaTeX document
 \documentclass[uplatex,a4paper]{jsarticle}
 \usepackage{bxjalipsum}
-\usepackage{plext}
+\usepackage{plext}% for '\bou' command
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TeX code BEGIN
 % with a bit of TeXnique...
-%% Expand 'em!!
+%% Expand 'em all!!
 \edef\wagahaiOne{\jalipsum[1]{wagahai}}
 \edef\wagahaiTwo{\jalipsum[2-5]{wagahai}}
 %% \argexpd\CMD{<argument>}
@@ -13,6 +13,7 @@
 \begin{document}
 
 % rather nonsensical examples
+% (The \bou command add "bouten" to the given text.)
 
 \argexpd\bou{\jalipsumiroha}
 

@@ -59,9 +59,9 @@ No options are available.
 ### Notices for the TeX-programmers
 
   * All the commands are fully expandable.
-  * The `\jalipsum` commands is expanded to the actual text in two steps.
-  * The shorthand commands such as `\jalipsumiroha` is expanded to the
-    actual test in one step.
+  * The `\jalipsum` command is expanded to the actual text in two steps.
+  * The shorthand commands such as `\jalipsumiroha` are expanded to the
+    actual text in one step.
   * Each of the paragraph texts consists only of character tokens and
     optional `\\` (line-break) tokens.
   * When `\jalipsum` with multiple paragraphs is expanded, each paragraph
@@ -70,7 +70,7 @@ No options are available.
 Revision History
 ----------------
 
-  * Version 0.2  〈2016/04/01〉
+  * Version 0.2  〈2016/08/15〉
       - The first public version.
 
 --------------------

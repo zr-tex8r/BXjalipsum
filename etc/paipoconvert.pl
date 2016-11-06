@@ -13,13 +13,14 @@ my @range_A1 = qw(
  み む め も や ゆ よ ら り る れ ろ わ ん ゛ ゜
 );
 
-my ($rx_par, $rx_cr, $rx_iai, $rx_tbl);
+my ($rx_par, $rx_cr, $rx_iai, $rx_tbl, $rx_cmt);
 my ($ssgeta, %code);
 
 sub main {
   prepare();
   while (<>) {
     print((m/$rx_tbl/) ? dump_table() :
+      (m/$rx_cmt/) ? "" :
       (m/$rx_par/) ? convert_line($_) : ($_));
   }
 }
@@ -40,6 +41,7 @@ sub prepare {
   #
   $_ = encode('utf8', $mark_par); $rx_par = qr/^$_/;
   $_ = encode('utf8', $mark_tbl); $rx_tbl = qr/^$_/;
+  $_ = encode('utf8', "\%$mark_tbl"); $rx_cmt = qr/^$_/;
   $rx_cr = qr/$mark_cr/; $rx_iai = qr/$mark_iai/;
   #
   %code = ( "\n" => "\n", "\xA0" => "\xA0" );

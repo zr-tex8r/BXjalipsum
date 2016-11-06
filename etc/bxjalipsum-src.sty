@@ -2,7 +2,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxjalipsum}[2016/08/15 v0.2]
+\ProvidesPackage{bxjalipsum}[2016/11/06 v0.3]
 \def\bxjl@pkgname{bxjalipsum}
 
 %% preparation
@@ -10,6 +10,34 @@
 \newif\ifbxjl@etex
 \newif\ifbxjl@CJKtilde
 \providecommand\bxDebug[1]{}
+
+%% code guards
+\edef\bxjl@restore@codes{%
+  \catcode33=\the\catcode33%
+  \catcode34=\the\catcode34%
+  \catcode43=\the\catcode43%
+  \catcode45=\the\catcode45%
+  \catcode46=\the\catcode46%
+  \catcode47=\the\catcode47%
+  \catcode58=\the\catcode58%
+  \catcode60=\the\catcode60%
+  \catcode62=\the\catcode62%
+  \catcode96=\the\catcode96%
+  \catcode126=\the\catcode126%
+\relax}
+\catcode33=12 % <!>
+\catcode34=12 % <">
+\catcode43=12 % <+>
+\catcode45=12 % <->
+\catcode46=12 % <.>
+\catcode47=12 % </>
+\catcode58=12 % <:>
+\catcode60=12 % <<>
+\catcode62=12 % <>>
+\catcode96=12 % <`>
+\catcode126=13 % <~>
+\AtEndOfPackage{%
+  \bxjl@restore@codes \let\bxjl@restore@codes\relax}
 
 %--------------------------------------- package options
 
@@ -87,11 +115,6 @@
 \ifx b\bxjl@engine\else
   \bxjl@CJKtildefalse
 \fi
-\ifx b\bxjl@engine
-  \PackageError\bxjl@pkgname
-   {The pdfTeX engine is not (yet) supported}%
-   {Package loading is aborted.\MessageBreak\@ehc}
-\expandafter\endinput\fi\relax
 
 %--------------------------------------- error message
 \ifbxjl@etex        %---<*eTeX>
@@ -360,11 +383,11 @@
 %--------------------------------------- paipo decoder
 
 %% variables
-\let\bxjl@g@chr\relax
+\let\bxjl@chr\relax
 \let\bxjl@@cr\relax
 \let\bxjl@@iai\relax
 \let\bxjl@tbuf\relax
-\let\bxjl@edef@res\relax
+\let\bxjl@let@res\relax
 
 %% \bxjl@pdecode\CS{<p-code>}
 \chardef\bxjl@cst@x=10
@@ -372,10 +395,12 @@
 \chardef\bxjl@cst@cxxviii=128
 \chardef\bxjl@cst@clx=160
 \bxjl@preamble\def\bxjl@pdecode#1#2{%
-  \def\bxjl@edef@res{\edef#1}%
-  \let\bxjl@@iai\relax\let\bxjl@@cr\relax
-  \let\bxjl@tbuf\@empty\edef\bxjl@next{#2}%
-  \expandafter\bxjl@pdecode@a\bxjl@next00%
+  \def\bxjl@let@res{\let#1}%
+  \begingroup
+    \bxjl@set@activechar
+    \let\bxjl@@iai\relax\let\bxjl@@cr\relax
+    \let\bxjl@tbuf\@empty\edef\bxjl@next{#2}%
+    \expandafter\bxjl@pdecode@a\bxjl@next00%
 }
 \bxjl@preamble\def\bxjl@pdecode@a#1#2{%
   \bxjl@cc"#1#2\relax
@@ -413,13 +438,15 @@
   \expandafter\bxjl@pdecode@jacod\bxjl@next
 }
 \bxjl@preamble\def\bxjl@pdecode@e{%
-  \def\bxjl@@cr{\noexpand\\}%
-  \def\bxjl@@iai{\noexpand~}%
-  \ifbxjl@CJKtilde\else
-    \let\bxjl@@iai\@empty
-  \fi
-  \bxjl@edef@res{\bxjl@tbuf}%
-  \let\bxjl@tbuf\@empty
+    \def\bxjl@@cr{\noexpand\\}%
+    \def\bxjl@@iai{\noexpand~}%
+    \ifbxjl@CJKtilde\else
+      \let\bxjl@@iai\@empty
+    \fi
+    \xdef\bxjl@g@tmpa{\bxjl@tbuf}%
+  \endgroup
+  \bxjl@let@res\bxjl@g@tmpa
+  \let\bxjl@g@tmpa\@empty
 }
 %
 \bxjl@preamble\def\bxjl@pdecode@add#1{%
@@ -431,11 +458,11 @@
   \else
     \bxjl@get@alchr\bxjl@cc 0%
   \fi
-  \bxjl@pdecode@add\bxjl@g@chr
+  \bxjl@pdecode@add\bxjl@chr
 }
 \bxjl@preamble\def\bxjl@pdecode@jachr{%
   \bxjl@get@jachr\bxjl@cc
-  \bxjl@pdecode@add\bxjl@g@chr
+  \bxjl@pdecode@add\bxjl@chr
 }
 %
 \ifx l\bxjl@engine
@@ -457,27 +484,67 @@
     \bxjl@pdecode@nxt
   }
 \else
+  \chardef\bxjl@UERDX="40
+  \chardef\bxjl@UELDC="E0
+  \chardef\bxjl@UELDB="C0
+  \chardef\bxjl@UELDA="80
+  \mathchardef\bxjl@UEMDB="7FF
+  \bxjl@preamble\def\bxjl@pdecode@jacod#1#2#3#4#5#6#7#8{%
+    \bxjl@cc="#5#6#7#8\relax
+    \bxjl@get@utfchr
+    \bxjl@pdecode@add\bxjl@chr
+    \bxjl@pdecode@nxt
+  }
+  \bxjl@preamble\def\bxjl@get@utfchr{%
+    \let\bxjl@chr\@empty
+    \ifnum\bxjl@cc>\bxjl@UEMDB % 3-byte
+      \bxjl@get@utfchr@a
+      \bxjl@get@utfchr@a
+      \advance\bxjl@cc\bxjl@UELDC
+      \uccode`\~\bxjl@cc \uppercase{\edef\bxjl@chr{~\bxjl@chr}}%
+    \else % 2-byte
+      \bxjl@get@utfchr@a
+      \advance\bxjl@cc\bxjl@UELDB
+      \uccode`\~\bxjl@cc \uppercase{\edef\bxjl@chr{~\bxjl@chr}}%
+    \fi
+  }
+  \bxjl@preamble\def\bxjl@get@utfchr@a{%
+    \@tempcnta\bxjl@cc
+    \divide\bxjl@cc\bxjl@UERDX
+    \@tempcntb-\bxjl@cc \multiply\@tempcntb\bxjl@UERDX
+    \advance\@tempcnta\@tempcntb \advance\@tempcnta\bxjl@UELDA
+    \uccode`\~\@tempcnta \uppercase{\edef\bxjl@chr{~\bxjl@chr}}%
+  }
 \fi\fi\fi
 
 %% \bxjl@get@alchr
 \bxjl@preamble\def\bxjl@get@alchr#1#2{%
-  \begingroup
-    \uccode`#2=#1\relax
-    \uppercase{\gdef\bxjl@g@chr{#2}}%
-  \endgroup
+  \uccode`#2=#1\relax
+  \uppercase{\def\bxjl@chr{#2}}%
 }
 
 %% \bxjl@get@jachr
 \bxjl@preamble\def\bxjl@get@jachr#1{%
-  \begingroup
-    \kansujichar\@ne=#1\relax
-    \xdef\bxjl@g@chr{\kansuji\@ne}%
-  \endgroup
+  \kansujichar\@ne=#1\relax
+  \edef\bxjl@chr{\kansuji\@ne}%
 }
+
+%% \bxjl@set@activechar
+\ifx b\bxjl@engine
+  \bxjl@preamble\def\bxjl@set@activechar{%
+    \@tempcnta\bxjl@cst@cxxviii
+    \@whilenum{\@tempcnta<\@cclvi}\do{%
+      \catcode\@tempcnta\active
+      \uccode`\~\@tempcnta \uppercase{\let~\relax}% freeze
+      \advance\@tempcnta\@ne}%
+  }
+\else
+  \bxjl@preamble\def\bxjl@set@activechar{}
+\fi
 
 %% \bxjl@pc/<num>
 \def\do#1#2{\@namedef{bxjl@pc/\number"#1}{#2}}
-〠〠〠〠〠〠〠〠〠〠
+〠〠〠 % this line will be replaced by some lines of TeX code
 
 %--------------------------------------- text data
 % Very unfortunately, no single encoding can serve all probable uses of
@@ -497,6 +564,16 @@
   \fi
   \bxjl@pdecode#2{#3}%
 }
+%〠\bxjl@text{test}{1}{% FOR TEST
+%〠☃TeX·はアレ☂超絶アレ
+%〠}
+
+%〠 NOTICE:
+%〠 A line marked with leading '☃' will be converted to some lines of
+%〠 hex dump strings. The stuff following '☃' must be plain text.
+%〠 In the text, '☂' will be replaced by '\\' and '·' (U+00B7) will
+%〠 be result in 'shibuaki' (i.e. converted to '~' if \CJKtilde of the
+%〠 CJK package is effective; ignored otherwise).
 
 %===============================
 %% text 'iroha'

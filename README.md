@@ -12,7 +12,7 @@ language, the package uses some real text in public domain.
 ### System requirement
 
   * TeX format: LaTeX.
-  * TeX engine: pTeX / upTeX / XeTeX / LuaTeX.
+  * TeX engine: pdfTeX / pTeX / upTeX / XeTeX / LuaTeX.
   * Dependent packages:
       - intcalc (when using non-e-TeX engines)
 
@@ -56,6 +56,13 @@ No options are available.
   * `\jalipsumjugemu`: The shorthand for `\jalipsum{jugemu}`.
   * `\jalipsumjugemuP`: The shorthand for `\jalipsum{jugemuP}`.
 
+### Notices on use with pdfTeX
+
+  * In using with pdfTeX, Japanese (non-ASCII) characters are represented
+    as UTF-8 byte sequences. Thus there must be some mechanism (such as
+    the CJKutf8 package) that will decode such sequences and display the
+    Japanese characters properly.
+
 ### Notices for the TeX-programmers
 
   * All the commands are fully expandable.
@@ -70,6 +77,8 @@ No options are available.
 Revision History
 ----------------
 
+  * Version 0.3  〈2016/11/06〉
+      - Added the support for pdfTeX.
   * Version 0.2  〈2016/08/15〉
       - The first public version.
 

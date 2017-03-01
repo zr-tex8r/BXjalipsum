@@ -48,6 +48,8 @@ No options are available.
         Japan.
       - `hatsukoi` (4 paragraphs): The whole text of the poem "初恋"
         (First Love) written by Shimazaki Toson.
+      - `kusamakura` (13 paragraphs): The opening passage from the novel
+        "草枕" (Kusamakura) written by Natsume Soseki.
 
     Ranges are specified in the form `[-3,7-10,5,12-]`. If ranges are not
     given, then `[-]` (all paragraphs) will be assumed.
@@ -77,9 +79,11 @@ No options are available.
 Revision History
 ----------------
 
-  * Version 0.3  〈2016/11/06〉
+  * Version 0.3a ‹2017/03/01›
+      - Added text “kusamakura”.
+  * Version 0.3  ‹2016/11/06›
       - Added the support for pdfTeX.
-  * Version 0.2  〈2016/08/15〉
+  * Version 0.2  ‹2016/08/15›
       - The first public version.
 
 --------------------

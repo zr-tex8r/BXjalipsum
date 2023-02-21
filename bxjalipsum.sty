@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bxjalipsum}[2017/03/01 v0.3a]
+\ProvidesPackage{bxjalipsum}[2023/02/22 v1.0]
 \def\bxjl@pkgname{bxjalipsum}
 
 %% preparation
@@ -114,6 +114,10 @@
 \bxjl@next\enablecjktoken{\let\bxjl@engine=u}
 \bxjl@next\luatexversion{\let\bxjl@engine=l}
 \bxjl@next\XeTeXversion{\let\bxjl@engine=l}
+\ifx u\bxjl@engine \ifnum\ucs"3000="3000 \else
+  % only upTeX in Unicode is seen as upTeX
+  \let\bxjl@engine=p
+\fi\fi
 
 %% switchh bxjl@etex
 \bxjl@etexfalse

@@ -12,7 +12,12 @@ language, the package uses some real text in public domain.
 ### System requirement
 
   * TeX format: LaTeX.
-  * TeX engine: pdfTeX / pTeX / upTeX / XeTeX / LuaTeX.
+  * TeX engine: pdfTeX / (e-)pTeX / (e-)upTeX / XeTeX / LuaTeX.
+      - pdfTeX: v1.40 or later
+      - pTeX: v2.0 or later
+      - upTeX: v0.10 or later
+      - XeTeX: v0.9994 or later
+      - LuaTeX: v0.60 or later
   * Dependent packages:
       - intcalc (when using non-e-TeX engines)
 
@@ -48,6 +53,7 @@ No options are available.
         Japan.
       - `hatsukoi` (4 paragraphs): The whole text of the poem "初恋"
         (First Love) written by Shimazaki Toson.
+          + The lines inside a stanza are delimited by '\\' command.
       - `kusamakura` (13 paragraphs): The opening passage from the novel
         "草枕" (Kusamakura) written by Natsume Soseki.
 
@@ -60,7 +66,7 @@ No options are available.
 
 ### Notices on use with pdfTeX
 
-  * In using with pdfTeX, Japanese (non-ASCII) characters are represented
+  * When pdfTeX is used, Japanese (non-ASCII) characters are represented
     as UTF-8 byte sequences. Thus there must be some mechanism (such as
     the CJKutf8 package) that will decode such sequences and display the
     Japanese characters properly.
@@ -79,6 +85,8 @@ No options are available.
 Revision History
 ----------------
 
+  * Version 1.0  ‹2023/02/22›
+      - Supported new version of pLaTeX.
   * Version 0.3a ‹2017/03/01›
       - Added text “kusamakura”.
   * Version 0.3  ‹2016/11/06›
@@ -88,4 +96,4 @@ Revision History
 
 --------------------
 Takayuki YATO (aka. "ZR")  
-http://zrbabbler.sp.land.to/
+https://github.com/zr-tex8r

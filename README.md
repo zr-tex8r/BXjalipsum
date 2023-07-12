@@ -71,7 +71,7 @@ No options are available.
     the CJKutf8 package) that will decode such sequences and display the
     Japanese characters properly.
 
-### Notices for the TeX-programmers
+### Notices for TeX programmers
 
   * All the commands are fully expandable.
   * The `\jalipsum` command is expanded to the actual text in two steps.
@@ -85,6 +85,9 @@ No options are available.
 Revision History
 ----------------
 
+
+  * Version 1.0a ‹2023/07/12›
+      - Bug fix.
   * Version 1.0  ‹2023/02/22›
       - Supported new version of pLaTeX.
   * Version 0.3a ‹2017/03/01›

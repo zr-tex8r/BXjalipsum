@@ -324,6 +324,14 @@
 \catcode`\:=12 \catcode`\!=12
 %--------------------------------------- lipsum public commands
 
+%%<*> \jalipsumyukidaruma
+\@ifdefinable\jalipsumyukidaruma{%
+\newcommand*\jalipsumyukidaruma{}%dummy
+  \AtEndOfPackage{%
+    \bxjl@csletcs{jalipsumyukidaruma}{bxjl@tx@@yukidaruma/1}%
+  }
+}
+
 %%<*> \jalipsumiroha
 \@ifdefinable\jalipsumiroha{%
 \newcommand*\jalipsumiroha{}%dummy
@@ -646,6 +654,14 @@
   \bxjl@pdecode#2{#3}%
 }
 
+
+%===============================
+%% text 'yukidaruma'
+% Yukidaruma (Nice!)
+\bxjl@text{yukidaruma}{1}{%
+% ゆきだるま
+D5B782BE3060D9CF%
+}
 
 %===============================
 %% text 'iroha'

@@ -110,10 +110,15 @@
 
 %% \bxjl@engine
 \let\bxjl@engine=b
+\bxjl@next\Uchar{\let\bxjl@engine=l}
 \bxjl@next\kanjiskip{\let\bxjl@engine=p}
 \bxjl@next\enablecjktoken{\let\bxjl@engine=u}
 \bxjl@next\luatexversion{\let\bxjl@engine=l}
 \bxjl@next\XeTeXversion{\let\bxjl@engine=l}
+\ifx u\bxjl@engine \ifnum\ucs"3000="3000 \else
+  % only upTeX in Unicode is seen as upTeX
+  \let\bxjl@engine=p
+\fi\fi
 
 %% switchh bxjl@etex
 \bxjl@etexfalse
@@ -173,9 +178,9 @@
 %% package
 \RequirePackage{intcalc}
 %% \bxjl@add@num{<x>}{<y>}
-\let\bxjl@add@num\intcalcadd@num
+\let\bxjl@add@num\intcalcAdd
 %% \bxjl@sub@num{<x>}{<y>}
-\let\bxjl@sub@num\intcalcsub@num
+\let\bxjl@sub@num\intcalcSub
 
 \fi                 %---</eTeX>
 %--------------------------------------- range list parser
@@ -319,8 +324,17 @@
 \catcode`\:=12 \catcode`\!=12
 %--------------------------------------- lipsum public commands
 
+%%<*> \jalipsumyukidaruma
+\@ifdefinable\jalipsumyukidaruma{%
+\newcommand*\jalipsumyukidaruma{}%dummy
+  \AtEndOfPackage{%
+    \bxjl@csletcs{jalipsumyukidaruma}{bxjl@tx@@yukidaruma/1}%
+  }
+}
+
 %%<*> \jalipsumiroha
 \@ifdefinable\jalipsumiroha{%
+\newcommand*\jalipsumiroha{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumiroha}{bxjl@tx@@iroha/1}%
   }
@@ -328,6 +342,7 @@
 
 %%<*> \jalipsumjugemu
 \@ifdefinable\jalipsumjugemu{%
+\newcommand*\jalipsumjugemu{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumjugemu}{bxjl@tx@@jugemu/1}%
   }
@@ -335,14 +350,18 @@
 
 %%<*> \jalipsumjugemuP
 \@ifdefinable\jalipsumjugemuP{%
+\newcommand*\jalipsumjugemuP{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumjugemuP}{bxjl@tx@@jugemuP/1}%
   }
 }
 
 %%<*> \jalipsum[<range>]{<key>}
-\newcommand*{\jalipsum}{%
-  \bxjl@burst-`>\bxjl@jalipsum@a
+\@ifdefinable\jalipsum{%
+\newcommand*\jalipsum[2][-]{}%dummy
+  \def\jalipsum{%
+    \bxjl@burst-`>\bxjl@jalipsum@a
+  }
 }
 \def\bxjl@jalipsum@a#1#{%
   \bxjl@ifblank{#1}{%
@@ -582,6 +601,13 @@
 %〠 In the text, '☂' will be replaced by '\\' and '·' (U+00B7) will
 %〠 be result in 'shibuaki' (i.e. converted to '~' if \CJKtilde of the
 %〠 CJK package is effective; ignored otherwise).
+
+%===============================
+%% text 'yukidaruma'
+% Yukidaruma (Nice!)
+\bxjl@text{yukidaruma}{1}{%
+☃ゆきだるま
+}
 
 %===============================
 %% text 'iroha'

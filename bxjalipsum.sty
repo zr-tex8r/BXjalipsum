@@ -325,6 +325,7 @@
 
 %%<*> \jalipsumiroha
 \@ifdefinable\jalipsumiroha{%
+\newcommand*\jalipsumiroha{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumiroha}{bxjl@tx@@iroha/1}%
   }
@@ -332,6 +333,7 @@
 
 %%<*> \jalipsumjugemu
 \@ifdefinable\jalipsumjugemu{%
+\newcommand*\jalipsumjugemu{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumjugemu}{bxjl@tx@@jugemu/1}%
   }
@@ -339,14 +341,18 @@
 
 %%<*> \jalipsumjugemuP
 \@ifdefinable\jalipsumjugemuP{%
+\newcommand*\jalipsumjugemuP{}%dummy
   \AtEndOfPackage{%
     \bxjl@csletcs{jalipsumjugemuP}{bxjl@tx@@jugemuP/1}%
   }
 }
 
 %%<*> \jalipsum[<range>]{<key>}
-\newcommand*{\jalipsum}{%
-  \bxjl@burst-`>\bxjl@jalipsum@a
+\@ifdefinable\jalipsum{%
+\newcommand*\jalipsum[2][-]{}%dummy
+  \def\jalipsum{%
+    \bxjl@burst-`>\bxjl@jalipsum@a
+  }
 }
 \def\bxjl@jalipsum@a#1#{%
   \bxjl@ifblank{#1}{%

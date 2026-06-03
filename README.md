@@ -85,7 +85,8 @@ No options are available.
 Revision History
 ----------------
 
-
+  * Version 1.0b ‹2026/06/02›
+      - Added text “yukidaruma”.
   * Version 1.0a ‹2023/07/12›
       - Bug fix.
   * Version 1.0  ‹2023/02/22›
